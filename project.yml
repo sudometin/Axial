@@ -1,0 +1,121 @@
+name: Axial
+options:
+  bundleIdPrefix: com.matinhassanloo
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "0.2.0"
+    CURRENT_PROJECT_VERSION: "2"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_HARDENED_RUNTIME: YES
+targets:
+  Axial:
+    type: application
+    platform: macOS
+    sources:
+      - path: Axial
+        excludes:
+          - Info.plist
+    dependencies:
+      - target: AxialQuickLook
+    info:
+      path: Axial/Info.plist
+      properties:
+        CFBundleDisplayName: Axial
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        LSApplicationCategoryType: public.app-category.medical
+        NSHumanReadableCopyright: "© 2026 Matin Hassanloo. MIT License."
+        NSPrincipalClass: NSApplication
+        UTImportedTypeDeclarations:
+          - UTTypeIdentifier: com.matinhassanloo.axial.nifti
+            UTTypeDescription: NIfTI-1 Image
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [nii]
+          - UTTypeIdentifier: org.nema.dicom
+            UTTypeDescription: DICOM Image
+            UTTypeConformsTo: [public.data]
+            UTTypeTagSpecification:
+              public.filename-extension: [dcm, dicom]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.matinhassanloo.Axial
+        PRODUCT_NAME: Axial
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_ENTITLEMENTS: Axial/Axial.entitlements
+        COMBINE_HIDPI_IMAGES: YES
+
+  AxialQuickLook:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: AxialQuickLook
+        excludes:
+          - Info.plist
+          - "*.entitlements"
+      - path: Axial/IO
+      - path: Axial/Rendering
+      - path: Axial/Utilities
+      - path: Axial/Models/Volume.swift
+    info:
+      path: AxialQuickLook/Info.plist
+      properties:
+        CFBundleDisplayName: Axial Quick Look
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewProvider
+          NSExtensionAttributes:
+            QLIsDataBasedPreview: true
+            QLSupportsSearchableItems: false
+            QLSupportedContentTypes:
+              - com.matinhassanloo.axial.nifti
+              - org.nema.dicom
+    entitlements:
+      path: AxialQuickLook/AxialQuickLook.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-only: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.matinhassanloo.Axial.QuickLook
+        PRODUCT_NAME: AxialQuickLook
+        SKIP_INSTALL: YES
+
+  AxialTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: AxialTests
+    dependencies:
+      - target: Axial
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.matinhassanloo.AxialTests
+schemes:
+  Axial:
+    build:
+      targets:
+        Axial: all
+        AxialTests: [test]
+    test:
+      targets:
+        - AxialTests
+      gatherCoverageData: true
+    run:
+      config: Debug
+    archive:
+      config: Release

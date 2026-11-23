@@ -1,0 +1,16 @@
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+build/
+*.xcresult
+
+# macOS
+.DS_Store
+
+# Never commit real patient data or re-identification keys
+*.dcm
+!SampleData/**/*.dcm
+axial-reidentification-key.csv
+*.dmg
