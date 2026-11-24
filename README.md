@@ -156,4 +156,4 @@ Issues and pull requests are welcome. Please **never attach real patient data**;
 
 ## License
 
-[MIT](LICENSE) © 2026 Matin Hassanloo · [github.com/maasker](https://github.com/maasker)
+[MIT](LICENSE) © 2026 Matin Hassanloo · [github.com/sudometin](https://github.com/sudometin)
